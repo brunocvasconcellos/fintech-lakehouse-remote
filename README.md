@@ -175,23 +175,6 @@ Ou rodá-lo localmente, criando um virtualenv e instalando `requirements.txt`.
 
 3. No Looker Studio, conecte diretamente ao BigQuery usando o conector nativo e construa relatórios
    em cima das tabelas/views criadas.
-
----
-
-## Publicação no GitHub
-
-- Não commitar `.env` nem `./creds`.
-- Deixe `.env.example` preenchido com valores de exemplo seguros.
-- Documente no README os passos de configuração (já incluído neste arquivo).
-
-Esse repositório foi pensado para ser um **case completo de engenharia de dados**, mostrando:
-
-- ingestão batch de um sistema financeiro (fintech) em PostgreSQL;
-- uso de Parquet em data lake (GCS);
-- modelagem analítica no BigQuery;
-- consumo via ferramenta de BI.
-
-
 ---
 
 ## Carga incremental e watermark

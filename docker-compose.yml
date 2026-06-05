@@ -1,0 +1,69 @@
+services:
+  airflow-init:
+    build: .
+    container_name: airflow-init
+    env_file:
+      - .env
+    environment: &airflow-env
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: sqlite:////opt/airflow/airflow.db
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+      PYTHONPATH: /opt/airflow
+    user: "${AIRFLOW_UID}:0"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./ingestion:/opt/airflow/ingestion
+      - ./common:/opt/airflow/common
+      - ./scripts:/opt/airflow/scripts
+      - ./sql:/opt/airflow/sql
+      - ./data:/opt/airflow/data
+      - ./creds:/opt/airflow/creds
+    command: >
+      bash -c "airflow db migrate && airflow users create         --username ${AIRFLOW_ADMIN_USERNAME}         --password ${AIRFLOW_ADMIN_PASSWORD}         --firstname Airflow         --lastname Admin         --role Admin         --email ${AIRFLOW_ADMIN_EMAIL} || true"
+
+  airflow-webserver:
+    build: .
+    container_name: airflow-webserver
+    env_file:
+      - .env
+    environment: *airflow-env
+    user: "${AIRFLOW_UID}:0"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./ingestion:/opt/airflow/ingestion
+      - ./common:/opt/airflow/common
+      - ./scripts:/opt/airflow/scripts
+      - ./sql:/opt/airflow/sql
+      - ./data:/opt/airflow/data
+      - ./creds:/opt/airflow/creds
+    command: webserver
+    ports:
+      - "8080:8080"
+    depends_on:
+      - airflow-init
+
+  airflow-scheduler:
+    build: .
+    container_name: airflow-scheduler
+    env_file:
+      - .env
+    environment: *airflow-env
+    user: "${AIRFLOW_UID}:0"
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./ingestion:/opt/airflow/ingestion
+      - ./common:/opt/airflow/common
+      - ./scripts:/opt/airflow/scripts
+      - ./sql:/opt/airflow/sql
+      - ./data:/opt/airflow/data
+      - ./creds:/opt/airflow/creds
+    command: scheduler
+    depends_on:
+      - airflow-init

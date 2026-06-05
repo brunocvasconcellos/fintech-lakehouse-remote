@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.venv/
+venv/
+.envrc
+creds/
+airflow/logs/*
+!airflow/logs/.gitkeep
+.DS_Store

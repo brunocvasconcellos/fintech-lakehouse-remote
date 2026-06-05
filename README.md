@@ -1,6 +1,6 @@
 # Fintech Lakehouse – Remote PostgreSQL, GCS, BigQuery
 
-Projeto completo de portfólio de engenharia de dados com:
+Projeto de engenharia de dados com:
 
 - PostgreSQL remoto como origem transacional.
 - Apache Airflow (Docker) como orquestrador.
